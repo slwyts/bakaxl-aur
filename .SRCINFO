@@ -1,5 +1,5 @@
 pkgbase = bakaxl
-	pkgdesc = BakaXL Minecraft Launcher (official pre-built .deb repackaged for Arch)
+	pkgdesc = BakaXL Minecraft Launcher (repacked from official .deb; desktop entry patched for AMD/INTEL+NV dual-GPU Mesa EGL)
 	pkgver = 4.0.0+bunny
 	pkgrel = 1
 	url = https://www.bakaxl.com
