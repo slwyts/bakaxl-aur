@@ -1,5 +1,6 @@
-# Maintainer: slwyts <slwyts@users.noreply.github.com>
-pkgname=bakaxl-bin
+# Maintainer: slwyts <slwyts@foxmail.com>
+# Repo: https://github.com/slwyts/bakaxl-aur
+pkgname=bakaxl
 pkgver=4.0.0+bunny
 _rev=a03f125
 pkgrel=1
@@ -7,10 +8,7 @@ pkgdesc="BakaXL Minecraft Launcher (official pre-built .deb repackaged for Arch)
 arch=('x86_64')
 url="https://www.bakaxl.com"
 license=('custom')
-depends=()
-makedepends=('dpkg')
-provides=('bakaxl')
-conflicts=('bakaxl')
+depends=('gtk3' 'webkit2gtk-4.1' 'libsoup3' 'hicolor-icon-theme')
 
 source=(
   "https://github.com/BakaXL-Launcher/BakaXL/releases/download/${pkgver}-${_rev}/bakaxl-${pkgver}-${_rev}-linux-x86_64.deb"
@@ -22,6 +20,13 @@ sha256sums=(
 )
 
 package() {
-  dpkg-deb -x "${srcdir}/bakaxl-${pkgver}-${_rev}-linux-x86_64.deb" "${pkgdir}"
+  cd "${srcdir}"
+  ar x "bakaxl-${pkgver}-${_rev}-linux-x86_64.deb" data.tar.gz
+  tar xzf data.tar.gz -C "${pkgdir}"
+
+  # Patch desktop entry with GPU fix for dual-GPU (AMD iGPU + NVIDIA)
+  sed -i 's|^Exec=BakaXL$|Exec=env __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json __NV_PRIME_RENDER_OFFLOAD=0 DRI_PRIME=0 /usr/bin/BakaXL|' \
+    "${pkgdir}/usr/share/applications/BakaXL.desktop"
+
   install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
